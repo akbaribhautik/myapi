@@ -11,7 +11,7 @@ cloudinary.config({
     api_secret: '1srGII8er39W61cjILZ6BFa3Qdo',
 
 });
-router.get('/', checkAuth, (req, res, next) => {
+router.get('/', (req, res, next) => {
     Product.find()
         .then(result => {
             console.log(result)
