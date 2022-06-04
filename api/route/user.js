@@ -162,10 +162,13 @@ router.post('/login', (req, res, next) => {
                phone:user[0].phone,
               }, 'this is dummy text',{ expiresIn: '24h' });
               res.status(200).json({
+                _id: user[0]._id,
                 username:user[0].username,
                 email:user[0].email,
                 phone:user[0].phone,
-                token:token
+                token:token,
+                
+
                 
               })
         }

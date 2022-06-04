@@ -106,15 +106,21 @@ router.put('/:id', checkAuth, (req, res, next) => {
         })
 })
 router.post('/addProduct', (req, res, next) => {
+    console.log('allprams', req.body)
     const file = req.files.photo;
 
     cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
         console.log(result)
         const product = new Product({
             _id: new mongoose.Types.ObjectId,
+            userId: req.body.userId,
+            price: req.body.price,
+            number: req.body.number,
+            address:req.body.address,
             title: req.body.title,
             description: req.body.description,
             imagePath: result.url,
+
         })
         product.save()
             .then(result => {
