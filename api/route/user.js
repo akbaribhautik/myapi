@@ -111,7 +111,9 @@ router.post('/signup', (req, res, next) => {
           return;
         }
         if (user) {
-          res.status(400).send({ message: "Email is already in use!" });
+          res.status(400).send({
+            status: 404,  
+            message: "Email is already in use!" });
           return;
         }
         bcrypt.hash(req.body.password, 10, (err, hash) => {
