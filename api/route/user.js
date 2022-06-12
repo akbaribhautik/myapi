@@ -103,42 +103,55 @@ router.put('/:id', (req, res, next) => {
         })
 })
 router.post('/signup', (req, res, next) => {
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
+    User.findOne({
+        email: req.body.email
+      }).exec((err, user) => {
         if (err) {
-            return res.status(500).json({
-                Error: err
-            })
-        } else {
-            const user = new User({
-                _id: new mongoose.Types.ObjectId,
-                username: req.body.username,
-                password: hash,
-                phone: req.body.phone,
-                email: req.body.email,
-               
-
-            })
-            user.save()
-            .then(result => {
-                console.log('res', res)
-    
-                res.status(200).json({
-                    status: 200,
-                    message: 'success',
-                    data: [result]
-                })
-            })
-            .catch(err => {
-                console.log(err)
-                res.status(500).json({
-                    status: 400,
-                    message: 'fail',
+          res.status(500).send({ message: err });
+          return;
+        }
+        if (user) {
+          res.status(400).send({ message: "Email is already in use!" });
+          return;
+        }
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if (err) {
+                return res.status(500).json({
                     Error: err
                 })
-            })
-        }
-    });     
-})
+            } else {
+                const user = new User({
+                    _id: new mongoose.Types.ObjectId,
+                    username: req.body.username,
+                    password: hash,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                   
+    
+                })
+                user.save()
+                .then(result => {
+                    console.log('res', res)
+        
+                    res.status(200).json({
+                        status: 200,
+                        message: 'success',
+                        data: [result]
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).json({
+                        status: 400,
+                        message: 'fail',
+                        Error: err
+                    })
+                })
+            }
+        });     
+      });
+    });
+  
 
 
 router.post('/login', (req, res, next) => {
